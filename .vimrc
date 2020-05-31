@@ -4,7 +4,7 @@
 "                           \ V /| | | | | | | | | (__                          "
 "                            \_/ |_|_| |_| |_|_|  \___|                         "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                   Plugin Manager                              "
+"                                 VIM Plugin List                               "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Install the plugin manager if it doesn't exist
 let s:plugin_manager=expand('~/.vim/autoload/plug.vim')
@@ -27,18 +27,19 @@ if empty(glob(s:plugin_manager))
     augroup END
 endif
 
-" List all plugins
-"" Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugins')
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+" - Make sure you use single quotes
+call plug#begin('~/.vim/plugged')
 
-" Colorscheme, status bar and tabline bar
+" Colorscheme and statusLine 
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'vim-airline/vim-airline'
+Plug 'itchyny/lightline.vim'
 
-" Tree and file explorer and icon for files
-Plug 'scrooloose/nerdtree'
-Plug 'xuyuanp/nerdtree-git-plugin'
-Plug 'ryanoasis/vim-devicons'
+" File Explorer and search into file
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Git integration
 Plug 'tpope/vim-fugitive'
@@ -47,12 +48,10 @@ Plug 'airblade/vim-gitgutter'
 " General Programing pack
 Plug 'tpope/vim-sensible'
 
-" Programing language syntax
-Plug 'vim-python/python-syntax'
-Plug 'tpope/vim-dotenv'
+" Initialize plugin system
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 Global Settings                               "
+"                                  Global Settings                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tab
 set expandtab
@@ -85,7 +84,7 @@ set noswapfile
 set splitbelow
 set splitright
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           custom bindings for key mapping                     "
+"                                    Key mapping                                "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Change leader key to Space
 let mapleader = "\<Space>"
@@ -99,69 +98,31 @@ noremap <C-H> <C-W><C-H>
 " Set leader+s to save current file
 nmap <Leader>s :w<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                               ColorScheme Settings                            "
+"                                 Theming Settings                              "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Set colors for termnail
-set t_Co=256
+" Defualt color options
+set laststatus=2
+if !has('gui_running')
+  set t_Co=256
+endif
 
-" Dracula setting
+" Dracula colorscheme setting
 let g:dracula_bold = 1
 let g:dracula_italic = 1
 let g:dracula_inverse = 1
 let g:dracula_colorterm = 0
-
-" Set colorscheme
 colorscheme dracula
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 Airline Settings                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Rrequired settings
-set laststatus=2
 
-" set theme
-let g:airline_theme='dracula'
-
-" Allow theme and icon as powerline
-let g:airline_powerline_fonts=1
-
-" Tabline enable and settings
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-
-" Set git integration
-let g:airline#extensions#branch#enabled=1
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                NERDTree Settings                              "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Ignore files in NERDTree
-let NERDTreeIgnore=['\.pyc$', '\.pyo$', '__pycache__$']
-
-" Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" Toogle NERDTree
-nmap <Leader>t :NERDTreeToggle<CR>
-
-" Open and close folder
-let g:DevIconsEnableFoldersOpenClose = 1
-
-" Change default arrows
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
+" StatusLine Option
+set noshowmode
+let g:lightline = {
+      \ 'colorscheme': 'dracula',
+      \ }
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                Python Settings                                "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Config syntax plugin
-let g:python_highlight_builtins = 1
-let g:python_highlight_doctests = 1
-let g:python_highlight_func_calls = 1
-let g:python_highlight_class_vars = 1
-let g:python_highlight_operators = 1
-let g:python_highlight_string_formatting = 1
-
-" set tab and indent width
-au BufNewFile,BufRead *.py
+" Set indent setting
+au BufNewFile, BufRead *.py
     \ set tabstop=4
     \ set softtabstop=4
     \ set shiftwidth=4
@@ -170,8 +131,8 @@ au BufNewFile,BufRead *.py
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                         HTML, CSS, Javascript Settings                        "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" set tab and indent width
-au BufNewFile,BufRead *.js, *.html, *.css
+" Set indent setting
+au BufNewFile ,BufRead *.js,*.html,*.css
     \ set tabstop=2
     \ set softtabstop=2
     \ set shiftwidth=2
